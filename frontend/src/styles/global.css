@@ -1,0 +1,187 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #020617;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+.layout { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #0f172a;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-right: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar-logo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #38bdf8;
+  padding: 0 8px 20px;
+  border-bottom: 1px solid #1e293b;
+  margin-bottom: 8px;
+}
+
+.sidebar-logo span { color: #94a3b8; font-size: 11px; display: block; font-weight: 400; margin-top: 2px; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.nav:hover { background: #1e293b; color: #e2e8f0; }
+.nav.active { background: #1e3a5f; color: #38bdf8; }
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+/* Main content */
+.main { flex: 1; padding: 28px; overflow-y: auto; }
+
+.page-title { font-size: 22px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
+.page-sub { font-size: 13px; color: #64748b; margin-bottom: 24px; }
+
+/* Cards */
+.card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+
+.card-title { font-size: 14px; font-weight: 600; color: #94a3b8; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Metric grid */
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 20px; }
+
+.metric {
+  background: #111827;
+  border: 1px solid #1e293b;
+  padding: 18px;
+  border-radius: 12px;
+  transition: border-color 0.15s;
+}
+.metric:hover { border-color: #334155; }
+.metric-value { font-size: 26px; font-weight: 700; color: #f1f5f9; }
+.metric-label { font-size: 12px; color: #64748b; margin-top: 4px; }
+.metric-sub { font-size: 11px; color: #475569; margin-top: 2px; }
+
+/* Feed items */
+.feed {
+  background: #111827;
+  border: 1px solid #1e293b;
+  padding: 12px 16px;
+  margin-top: 8px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+/* Risk badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-HIGH   { background: #3f1515; color: #f87171; border: 1px solid #7f1d1d; }
+.badge-MEDIUM { background: #3f2e0a; color: #fbbf24; border: 1px solid #78350f; }
+.badge-LOW    { background: #0a3f1a; color: #4ade80; border: 1px solid #14532d; }
+.badge::before { content: '●'; font-size: 8px; }
+
+/* Client list */
+.client {
+  background: #111827;
+  border: 1px solid #1e293b;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.client:hover { border-color: #38bdf8; background: #0c1e33; }
+.client.selected { border-color: #38bdf8; background: #0c1e33; }
+.client-name { font-size: 13px; font-weight: 600; color: #e2e8f0; }
+.client-id { font-size: 11px; color: #64748b; margin-top: 2px; }
+
+/* Holdings table */
+.holding {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #111827;
+  border: 1px solid #1e293b;
+  padding: 10px 16px;
+  border-radius: 10px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+.holding-ticker { font-weight: 700; color: #38bdf8; width: 60px; }
+.holding-shares { color: #94a3b8; }
+.holding-price  { color: #e2e8f0; font-weight: 600; }
+.holding-value  { color: #4ade80; font-weight: 600; }
+.holding-alloc  { color: #94a3b8; font-size: 11px; }
+
+/* AI insight box */
+.insight-box {
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.insight-explanation { background: #0c1e33; border: 1px solid #1e3a5f; color: #bae6fd; }
+.insight-action      { background: #0a1f0a; border: 1px solid #14532d; color: #bbf7d0; }
+.insight-disclaimer  { background: #1a1206; border: 1px solid #78350f; color: #fde68a; font-size: 11px; }
+.insight-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; opacity: 0.7; }
+
+/* Two-column layout */
+.two-col { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+.scroll-list { max-height: 75vh; overflow-y: auto; }
+.scroll-list::-webkit-scrollbar { width: 4px; }
+.scroll-list::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+/* Status dot */
+.live-dot { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; margin-right: 6px; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar { width: 60px; padding: 16px 8px; }
+  .sidebar-logo, .nav span { display: none; }
+  .two-col { grid-template-columns: 1fr; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Loading spinner */
+.spinner { border: 2px solid #1e293b; border-top-color: #38bdf8; border-radius: 50%; width: 24px; height: 24px; animation: spin 0.8s linear infinite; margin: 40px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Table styles */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 14px; color: #64748b; font-size: 11px; text-transform: uppercase; border-bottom: 1px solid #1e293b; }
+td { padding: 12px 14px; border-bottom: 1px solid #0f172a; color: #cbd5e1; }
+tr:hover td { background: #111827; }

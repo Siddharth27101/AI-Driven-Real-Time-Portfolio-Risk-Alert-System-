@@ -1,0 +1,110 @@
+name: Portfolio Risk System CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Job 1: Test Backend ──────────────────────────────────
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest httpx
+
+      - name: Run backend tests
+        run: |
+          cd backend
+          pytest tests/ -v
+        env:
+          AWS_ACCESS_KEY_ID: test
+          AWS_SECRET_ACCESS_KEY: test
+          AWS_DEFAULT_REGION: us-east-1
+
+  # ── Job 2: Test Frontend ─────────────────────────────────
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install and build
+        run: |
+          cd frontend
+          npm install
+          npm run build
+
+  # ── Job 3: Deploy to AWS (on main branch only) ───────────
+  deploy:
+    needs: [test-backend, test-frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:            us-east-1
+
+      - name: Set up Python for CDK
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install CDK
+        run: npm install -g aws-cdk
+
+      - name: Install CDK dependencies
+        run: |
+          cd infrastructure/cdk
+          pip install aws-cdk-lib constructs
+
+      - name: CDK Deploy
+        run: |
+          cd infrastructure/cdk
+          cdk deploy --require-approval never
+
+      - name: Seed portfolios on AWS
+        run: |
+          API_URL=$(aws cloudformation describe-stacks \
+            --stack-name PortfolioRiskStack \
+            --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" \
+            --output text)
+          curl -X POST "${API_URL}admin/seed"
+          echo "Portfolios seeded at ${API_URL}"
+
+      - name: Build and deploy frontend to S3
+        run: |
+          cd frontend
+          REACT_APP_API_URL=$(aws cloudformation describe-stacks \
+            --stack-name PortfolioRiskStack \
+            --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" \
+            --output text)
+          echo "REACT_APP_API_URL=${REACT_APP_API_URL}" > .env
+          npm install
+          npm run build
+          BUCKET=$(aws cloudformation describe-stacks \
+            --stack-name PortfolioRiskStack \
+            --query "Stacks[0].Outputs[?OutputKey=='FrontendBucket'].OutputValue" \
+            --output text)
+          aws s3 sync build/ s3://${BUCKET} --delete
+          echo "Frontend deployed to S3"
