@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AI-Driven Portfolio Risk Alert System
 ## Run Locally — No Docker, No AWS Account Needed
 
@@ -118,3 +119,6 @@ aws configure
 cdk bootstrap
 cdk deploy
 ```
+=======
+# AI-Driven-Real-Time-Portfolio-Risk-Alert-System
+>>>>>>> 21706cdd6cc54a2b6b15fb72d7c8337b88bca0ec
